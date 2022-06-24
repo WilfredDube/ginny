@@ -45,7 +45,9 @@ func setUpRoutes() *gin.Engine {
 
 	r.Handle("GET", "/", Home)
 	r.Handle("GET", "/snippet", ShowSnippet)
-	r.Handle("GET", "/snippet/create", CreateSnippet)
+	r.Handle("GET", "/snippet/create", PrepareSnippet)
+	r.Handle("GET", "/snippet/create/:id", PrepareSnippet)
+	r.Handle("POST", "/snippet/create/:id", CreateSnippet)
 
 	return r
 }
