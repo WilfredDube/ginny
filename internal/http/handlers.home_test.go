@@ -9,6 +9,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func init() {
+	gin.SetMode(gin.ReleaseMode)
+}
+
 func TestHomeController(t *testing.T) {
 	router := gin.Default()
 	router.GET("/", Home)
