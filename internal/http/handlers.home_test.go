@@ -1,8 +1,10 @@
 package http
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -14,8 +16,11 @@ func init() {
 }
 
 func TestHomeController(t *testing.T) {
+	handler := &SnippetHandler{}
+
 	router := gin.Default()
-	router.GET("/", Home)
+
+	router.GET("/", handler.Home)
 	router.LoadHTMLGlob("../../ui/html/*")
 
 	w := httptest.NewRecorder()
