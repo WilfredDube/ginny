@@ -9,7 +9,7 @@ import (
 
 // Home diplays the home page containing a list of all snippets.
 func Home(c *gin.Context) {
-	c.String(http.StatusOK, "Hello from home...")
+	c.HTML(http.StatusOK, "home.page.tmpl", nil)
 }
 
 // ShowSnippet displays a single selected snippet.
