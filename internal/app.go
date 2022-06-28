@@ -1,9 +1,17 @@
 package internal
 
 import (
+	"log"
+
 	"github.com/WilfredDube/ginny/internal/http"
 	"github.com/gin-gonic/gin"
 )
+
+type Application struct {
+	Config  Config
+	Logger  *log.Logger
+	handler http.SnippetHandler
+}
 
 // Creates a router
 func Routes() *gin.Engine {
