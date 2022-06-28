@@ -11,7 +11,7 @@ import (
 
 // The serverError helper writes an error message ans stack trace to the errorlog
 // then sends a generic 500 Internal server Error response to the user
-func serverError(c *gin.Context, err error) {
+func ServerError(c *gin.Context, err error) {
 	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
 	log.Println(trace)
 
