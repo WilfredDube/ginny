@@ -23,5 +23,9 @@ func TestHomeController(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 	router.ServeHTTP(w, req)
 
+	p, err := ioutil.ReadAll(w.Body)
+	pageOK := err == nil && strings.Index(string(p), "<title>Home - Snippetbox</title>") > 0
+
 	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, true, pageOK)
 }
