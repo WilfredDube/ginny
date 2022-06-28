@@ -2,9 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/WilfredDube/ginny/internal"
@@ -21,17 +19,13 @@ func main() {
 	errlog := log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lshortfile)
 
 	app := &internal.Application{
-		Config: cfg,
-		Logger: logger,
-	}
-
-	server := &http.Server{
-		Addr:     fmt.Sprintf(":%d", cfg.Port),
-		Handler:  app.Routes(),
+		Config:   cfg,
+		Logger:   logger,
 		ErrorLog: errlog,
 	}
 
-	logger.Println("Starting server on", cfg.Port)
-	err := server.ListenAndServe()
-	errlog.Fatal(err)
+	err := app.Serve()
+	if err != nil {
+		errlog.Fatal(err)
+	}
 }

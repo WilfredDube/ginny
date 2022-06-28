@@ -1,17 +1,70 @@
 package internal
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
-	"github.com/WilfredDube/ginny/internal/http"
+	controller "github.com/WilfredDube/ginny/internal/http"
 	"github.com/gin-gonic/gin"
 )
 
 type Application struct {
-	Config  Config
-	Logger  *log.Logger
-	handler http.SnippetHandler
+	Config   Config
+	Logger   *log.Logger
+	ErrorLog *log.Logger
+	handler  controller.SnippetHandler
+}
+
+func (app *Application) Serve() error {
+	// idleConnsClosed := make(chan struct{})
+
+	server := &http.Server{
+		Addr:     fmt.Sprintf(":%d", app.Config.Port),
+		Handler:  app.Routes(),
+		ErrorLog: app.ErrorLog,
+	}
+
+	shutdownErr := make(chan error)
+
+	go func() {
+		quit := make(chan os.Signal, 1)
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+		s := <-quit
+
+		app.ErrorLog.Println("caught signal", map[string]string{
+			"signal": s.String(),
+		})
+
+		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancel()
+
+		shutdownErr <- server.Shutdown(ctx)
+	}()
+
+	app.Logger.Println("starting server")
+
+	err := server.ListenAndServe()
+	if !errors.Is(err, http.ErrServerClosed) {
+		return err
+	}
+
+	err = <-shutdownErr
+	if err != nil {
+		return err
+	}
+
+	app.Logger.Println("stopping server", map[string]string{
+		"addr": server.Addr,
+	})
+
+	return nil
 }
 
 // Creates a router
@@ -38,7 +91,7 @@ func (app *Application) recoverPanic() gin.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				ctx.Header("Connection", "close")
-				http.ServerError(ctx, fmt.Errorf("%s", err))
+				controller.ServerError(ctx, fmt.Errorf("%s", err))
 			}
 		}()
 
