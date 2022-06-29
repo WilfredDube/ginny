@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/WilfredDube/ginny/internal/db"
 	controller "github.com/WilfredDube/ginny/internal/http"
 	"github.com/gin-gonic/gin"
 )
@@ -23,10 +24,16 @@ type Application struct {
 	handler  controller.SnippetHandler
 }
 
+func NewApplication(cfg Config, logger *log.Logger, db *db.Queries) *Application {
+	return &Application{
+		Config:  cfg,
+		Logger:  logger,
+		db:      db,
 		handler: controller.SnippetHandler{DB: db},
-func (app *Application) Serve() error {
-	// idleConnsClosed := make(chan struct{})
+	}
+}
 
+func (app *Application) Serve() error {
 	server := &http.Server{
 		Addr:     fmt.Sprintf(":%d", app.Config.Port),
 		Handler:  app.Routes(),
