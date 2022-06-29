@@ -19,9 +19,11 @@ type Application struct {
 	Config   Config
 	Logger   *log.Logger
 	ErrorLog *log.Logger
+	db       *db.Queries
 	handler  controller.SnippetHandler
 }
 
+		handler: controller.SnippetHandler{DB: db},
 func (app *Application) Serve() error {
 	// idleConnsClosed := make(chan struct{})
 

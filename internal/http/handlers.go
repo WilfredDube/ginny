@@ -3,11 +3,13 @@ package http
 import (
 	"net/http"
 
+	"github.com/WilfredDube/ginny/internal/db"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
 type SnippetHandler struct {
+	DB *db.Queries
 }
 
 // Home diplays the home page containing a list of all snippets.
