@@ -1,11 +1,16 @@
 package main
 
 import (
+	"database/sql"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
+	_ "github.com/jackc/pgx/v4/stdlib"
+
 	"github.com/WilfredDube/ginny/internal"
+	"github.com/WilfredDube/ginny/internal/db"
 )
 
 func main() {
@@ -13,6 +18,7 @@ func main() {
 
 	flag.IntVar(&cfg.Port, "port", 4000, "HTTP network port")
 	flag.StringVar(&cfg.StaticDir, "static-dir", "./ui/static", "Path to static assets")
+	flag.StringVar(&cfg.DSN, "db-dsn", os.Getenv("SNIPPET_DSN"), "PostgreSQL DSN")
 	flag.Parse()
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
