@@ -42,13 +42,18 @@ func main() {
 	}
 }
 
-func openDB(dsn string) (*db.Queries, error) {
+func openDB(dsn string) (*db.Queries, *sql.DB, error) {
 	conn, err := sql.Open("pgx", dsn)
 	if err != nil {
-		return nil, fmt.Errorf("pgx.Connect%w", err)
+		return nil, nil, fmt.Errorf("pgx.Connect%w", err)
+	}
+
+	if err = conn.Ping(); err != nil {
+		return nil, nil, err
 	}
 
 	db := db.New(conn)
 
-	return db, nil
+	return db, conn, nil
+}
 }
