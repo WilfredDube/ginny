@@ -19,7 +19,19 @@ func (h *SnippetHandler) Home(c *gin.Context) {
 
 // ShowSnippet displays a single selected snippet.
 func (h *SnippetHandler) ShowSnippet(c *gin.Context) {
-	c.String(http.StatusOK, "Display a specific snippet...")
+	id := c.Param("id")
+
+	snippet, err := h.DB.Get(context.Background(), uuid.MustParse(id))
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			notFound(c)
+		} else {
+			ServerError(c, err)
+		}
+		return
+	}
+
+	c.HTML(http.StatusOK, "show.page.tmpl", snippet)
 }
 
 // PrepareSnippet prepares an URL with a UUID for the creation of a snippets. Makes the
