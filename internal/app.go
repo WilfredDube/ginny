@@ -24,12 +24,13 @@ type Application struct {
 	handler  controller.SnippetHandler
 }
 
-func NewApplication(cfg Config, logger *log.Logger, db *db.Queries) *Application {
+func NewApplication(cfg Config, db *db.Queries, logger ...*log.Logger) *Application {
 	return &Application{
-		Config:  cfg,
-		Logger:  logger,
-		db:      db,
-		handler: controller.SnippetHandler{DB: db},
+		Config:   cfg,
+		Logger:   logger[0],
+		ErrorLog: logger[1],
+		db:       db,
+		handler:  controller.SnippetHandler{DB: db},
 	}
 }
 

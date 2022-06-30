@@ -47,7 +47,7 @@ func main() {
 
 	migrateDB(*migrationDir, driver)
 
-	app := internal.NewApplication(cfg, logger, db)
+	app := internal.NewApplication(cfg, db, logger, errlog)
 
 	err = app.Serve()
 	if err != nil {
