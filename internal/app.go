@@ -87,10 +87,10 @@ func (app *Application) Routes() *gin.Engine {
 	r.LoadHTMLGlob("ui/html/*")
 
 	r.Handle("GET", "/", app.handler.Home)
-	r.Handle("GET", "/snippet", app.handler.ShowSnippet)
-	r.Handle("GET", "/snippet/create", app.handler.PrepareSnippet)
-	r.Handle("GET", "/snippet/create/:id", app.handler.PrepareSnippet)
-	r.Handle("POST", "/snippet/create/:id", app.handler.CreateSnippet)
+	r.Handle("GET", "/snippets/:id", app.handler.ShowSnippet)
+	r.Handle("GET", "/snippets/create", app.handler.PrepareSnippet)
+	r.Handle("GET", "/snippets/create/:id", app.handler.PrepareSnippet)
+	r.Handle("POST", "/snippets/create/:id", app.handler.CreateSnippet)
 
 	return r
 }
