@@ -14,7 +14,16 @@ type SnippetHandler struct {
 
 // Home diplays the home page containing a list of all snippets.
 func (h *SnippetHandler) Home(c *gin.Context) {
-	c.HTML(http.StatusOK, "home.page.tmpl", nil)
+	s, err := h.DB.All(context.Background())
+	if err != nil {
+		ServerError(c, err)
+		return
+	}
+
+	c.HTML(http.StatusOK, "home.page.tmpl", gin.H{
+		"Page":     "Home",
+		"Snippets": s,
+	})
 }
 
 // ShowSnippet displays a single selected snippet.
