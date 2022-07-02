@@ -1,0 +1,24 @@
+{{template "header.partial.tmpl" .}}
+
+    <h2>Latest Snippets</h2>
+        {{if .Snippets}}
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Created</th>
+                <th>ID</th>
+            </tr>
+            {{range .Snippets}}
+                <tr>
+                    <td><a href='/snippets/{{.Guid}}'>{{.Title}}</a></td>
+                    <!-- Use the new template function here -->
+                    <td>{{.Created | HumanDateShort}}</td>
+                    <td>#{{.Guid.String | TrimGuid}}</td>
+                </tr>
+            {{end}}
+        </table>
+    {{else}}
+        <p>There's nothing to see here... yet!</p>
+    {{end}}
+
+{{template "footer.partial.tmpl" .}}
