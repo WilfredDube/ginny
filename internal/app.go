@@ -88,9 +88,9 @@ func (app *Application) Routes() *gin.Engine {
 	r.Static("/assets", "ui/assets")
 
 	r.SetFuncMap(template.FuncMap{
-		"TrimGuid":       TrimGuid,
-		"HumanDate":      HumanDate,
-		"HumanDateShort": HumanDateShort,
+		"TrimGuid":       controller.TrimGuid,
+		"HumanDate":      controller.HumanDate,
+		"HumanDateShort": controller.HumanDateShort,
 	})
 
 	r.LoadHTMLGlob("ui/html/*")
