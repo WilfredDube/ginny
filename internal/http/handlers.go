@@ -1,6 +1,9 @@
 package http
 
 import (
+	"context"
+	"database/sql"
+	"errors"
 	"net/http"
 
 	"github.com/WilfredDube/ginny/internal/db"
@@ -30,7 +33,7 @@ func (h *SnippetHandler) Home(c *gin.Context) {
 func (h *SnippetHandler) ShowSnippet(c *gin.Context) {
 	id := c.Param("id")
 
-	snippet, err := h.DB.Get(context.Background(), uuid.MustParse(id))
+	s, err := h.DB.Get(context.Background(), uuid.MustParse(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			notFound(c)
@@ -40,7 +43,10 @@ func (h *SnippetHandler) ShowSnippet(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "show.page.tmpl", snippet)
+	c.HTML(http.StatusOK, "show.page.tmpl", gin.H{
+		"Page":    "Snippet #" + s.Guid.String(),
+		"Snippet": s,
+	})
 }
 
 // PrepareSnippet prepares an URL with a UUID for the creation of a snippets. Makes the
