@@ -231,7 +231,7 @@ button:hover {
     border-radius: 3px;
 }
 
-.snippet pre {
+.snippet p {
     padding: 18px;
     border-top: 1px solid #E4E5E7;
     border-bottom: 1px solid #E4E5E7;
@@ -262,6 +262,13 @@ button:hover {
 
 .snippet .metadata time:last-child {
     float: right;
+}
+
+div.b {
+    padding: 18px;
+    border-top: 1px solid #E4E5E7;
+    border-bottom: 1px solid #E4E5E7;
+    word-wrap: break-word;
 }
 
 div.flash {
