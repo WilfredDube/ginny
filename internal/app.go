@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -85,6 +86,13 @@ func (app *Application) Routes() *gin.Engine {
 
 	// TODO: Use app.handler.Pusher() -> HTTP/2 & https required
 	r.Static("/assets", "ui/assets")
+
+	r.SetFuncMap(template.FuncMap{
+		"TrimGuid":       TrimGuid,
+		"HumanDate":      HumanDate,
+		"HumanDateShort": HumanDateShort,
+	})
+
 	r.LoadHTMLGlob("ui/html/*")
 
 	r.Handle("GET", "/", app.handler.Home)
