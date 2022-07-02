@@ -1,0 +1,19 @@
+{{template "header.partial.tmpl" .}}
+
+  {{with .Snippet}}
+      <div class='snippet'>
+          <div class='metadata'>
+              <strong>{{.Title}}</strong>
+              <span>#{{ .Guid.String | TrimGuid }}</span>
+          </div>
+          <p>{{.Content}}</p>
+          
+          <div class='metadata'>
+              <!-- Use the new template function here -->
+              <time>Created: {{.Created | HumanDate }}</time>
+              <time>Expires: {{.Expires | HumanDate }}</time>
+          </div>
+      </div>
+  {{end}}
+
+{{template "footer.partial.tmpl" .}}

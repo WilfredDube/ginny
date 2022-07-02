@@ -1,23 +1,52 @@
 package http
 
 import (
+	"context"
+	"database/sql"
+	"errors"
 	"net/http"
 
+	"github.com/WilfredDube/ginny/internal/db"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
 type SnippetHandler struct {
+	DB *db.Queries
 }
 
 // Home diplays the home page containing a list of all snippets.
 func (h *SnippetHandler) Home(c *gin.Context) {
-	c.HTML(http.StatusOK, "home.page.tmpl", nil)
+	s, err := h.DB.All(context.Background())
+	if err != nil {
+		ServerError(c, err)
+		return
+	}
+
+	c.HTML(http.StatusOK, "home.page.tmpl", gin.H{
+		"Page":     "Home",
+		"Snippets": s,
+	})
 }
 
 // ShowSnippet displays a single selected snippet.
 func (h *SnippetHandler) ShowSnippet(c *gin.Context) {
-	c.String(http.StatusOK, "Display a specific snippet...")
+	id := c.Param("id")
+
+	s, err := h.DB.Get(context.Background(), uuid.MustParse(id))
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			notFound(c)
+		} else {
+			ServerError(c, err)
+		}
+		return
+	}
+
+	c.HTML(http.StatusOK, "show.page.tmpl", gin.H{
+		"Page":    "Snippet #" + s.Guid.String(),
+		"Snippet": s,
+	})
 }
 
 // PrepareSnippet prepares an URL with a UUID for the creation of a snippets. Makes the

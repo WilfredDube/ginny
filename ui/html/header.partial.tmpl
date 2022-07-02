@@ -1,9 +1,8 @@
-{{define "base"}}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>{{template "title" .}} - Snippetbox</title>
+    <title>{{ .Page }} - Snippetbox</title>
     <!-- Link to the CSS stylesheet and favicon -->
     <link rel="stylesheet" href="/assets/css/main.css" />
     <link
@@ -11,12 +10,12 @@
       href="/assets/img/favicon.ico"
       type="image/x-icon"
     />
-    <!-- Also link to some fonts hosted by Google -->
+    <!-- Also link to some fonts hosted by Google
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700"
     />
-    
+     -->
   </head>
   <body>
     <header>
@@ -25,10 +24,4 @@
     <nav>
       <a href="/">Home</a>
     </nav>
-    <main>{{template "main" .}}</main>
-    {{template "footer" .}}
-    <!-- And include the JavaScript file -->
-    <script src="/assets/js/main.js" type="text/javascript"></script>
-  </body>
-</html>
-{{end}}
+    <main>
