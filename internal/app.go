@@ -104,16 +104,3 @@ func (app *Application) Routes() *gin.Engine {
 
 	return r
 }
-
-func (app *Application) recoverPanic() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		defer func() {
-			if err := recover(); err != nil {
-				ctx.Header("Connection", "close")
-				controller.ServerError(ctx, fmt.Errorf("%s", err))
-			}
-		}()
-
-		ctx.Next()
-	}
-}

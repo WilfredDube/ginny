@@ -15,3 +15,15 @@ func SecureHeader() gin.HandlerFunc {
 	}
 }
 
+func RecoverPanic() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		defer func() {
+			if err := recover(); err != nil {
+				ctx.Header("Connection", "close")
+				ServerError(ctx, fmt.Errorf("%s", err))
+			}
+		}()
+
+		ctx.Next()
+	}
+}
