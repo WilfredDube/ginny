@@ -87,6 +87,7 @@ func (app *Application) Routes() *gin.Engine {
 
 	// TODO: Use app.handler.Pusher() -> HTTP/2 & https required
 	r.Static("/assets", "ui/assets")
+	r.StaticFile("/favicon.ico", "ui/assets/img/favicon.ico")
 
 	r.SetFuncMap(template.FuncMap{
 		"TrimGuid":       controller.TrimGuid,

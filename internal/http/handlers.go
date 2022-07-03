@@ -25,9 +25,8 @@ func (h *SnippetHandler) Home(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "home.page.tmpl", gin.H{
-		"Page":        "Home",
-		"Snippets":    s,
-		"CurrentYear": time.Now().Year(),
+		"Page":     "Home",
+		"Snippets": s,
 	})
 }
 
@@ -46,9 +45,8 @@ func (h *SnippetHandler) ShowSnippet(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "show.page.tmpl", gin.H{
-		"Page":        "Snippet #" + s.Guid.String(),
-		"Snippet":     s,
-		"CurrentYear": time.Now().Year(),
+		"Page":    "Snippet #" + s.Guid.String(),
+		"Snippet": s,
 	})
 }
 
@@ -64,7 +62,9 @@ func (h *SnippetHandler) PrepareSnippet(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, location)
 	}
 
-	c.String(http.StatusOK, "Create new snippet..."+id)
+	c.HTML(http.StatusOK, "create.page.tmpl", gin.H{
+		"Page": "New ",
+	})
 }
 
 // CreateSnippet creates a snippet. Call is idempotent.
