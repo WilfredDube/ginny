@@ -82,7 +82,8 @@ func (app *Application) Serve() error {
 func (app *Application) Routes() *gin.Engine {
 	r := gin.Default()
 
-	r.Use(app.recoverPanic())
+	r.Use(controller.SecureHeader())
+	r.Use(controller.RecoverPanic())
 
 	// TODO: Use app.handler.Pusher() -> HTTP/2 & https required
 	r.Static("/assets", "ui/assets")
