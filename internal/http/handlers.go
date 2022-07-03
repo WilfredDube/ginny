@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/WilfredDube/ginny/internal/db"
 	"github.com/gin-gonic/gin"
@@ -24,8 +25,9 @@ func (h *SnippetHandler) Home(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "home.page.tmpl", gin.H{
-		"Page":     "Home",
-		"Snippets": s,
+		"Page":        "Home",
+		"Snippets":    s,
+		"CurrentYear": time.Now().Year(),
 	})
 }
 
@@ -44,8 +46,9 @@ func (h *SnippetHandler) ShowSnippet(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "show.page.tmpl", gin.H{
-		"Page":    "Snippet #" + s.Guid.String(),
-		"Snippet": s,
+		"Page":        "Snippet #" + s.Guid.String(),
+		"Snippet":     s,
+		"CurrentYear": time.Now().Year(),
 	})
 }
 
