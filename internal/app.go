@@ -82,7 +82,8 @@ func (app *Application) Serve() error {
 func (app *Application) Routes() *gin.Engine {
 	r := gin.Default()
 
-	r.Use(app.recoverPanic())
+	r.Use(controller.SecureHeader())
+	r.Use(controller.RecoverPanic())
 
 	// TODO: Use app.handler.Pusher() -> HTTP/2 & https required
 	r.Static("/assets", "ui/assets")
@@ -102,17 +103,4 @@ func (app *Application) Routes() *gin.Engine {
 	r.Handle("POST", "/snippets/create/:id", app.handler.CreateSnippet)
 
 	return r
-}
-
-func (app *Application) recoverPanic() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		defer func() {
-			if err := recover(); err != nil {
-				ctx.Header("Connection", "close")
-				controller.ServerError(ctx, fmt.Errorf("%s", err))
-			}
-		}()
-
-		ctx.Next()
-	}
 }
