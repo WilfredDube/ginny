@@ -57,11 +57,16 @@ func (h *SnippetHandler) PrepareSnippet(c *gin.Context) {
 
 	if len(id) == 0 {
 		// Generate GUID to make call idempotent
-		location := c.FullPath() + "/" + uuid.NewString()
+		newid := uuid.NewString()
 
-		c.Redirect(http.StatusMovedPermanently, location)
+		location := url.URL{Path: c.FullPath() + "/" + newid}
+
+		c.Header("Cache-Control", "no-store")
+		c.Redirect(http.StatusMovedPermanently, location.RequestURI())
+		return
 	}
 
+	c.Header("Cache-Control", "no-store")
 	c.HTML(http.StatusOK, "create.page.tmpl", gin.H{
 		"Page": "New ",
 	})
