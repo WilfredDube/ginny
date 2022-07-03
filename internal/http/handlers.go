@@ -4,7 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/WilfredDube/ginny/internal/db"
@@ -72,9 +74,43 @@ func (h *SnippetHandler) PrepareSnippet(c *gin.Context) {
 	})
 }
 
+type snippetRequest struct {
+	Title   string `json:"title"`
+	Content string `json:"content"`
+	Expires int64  `json:"expires,string"`
+}
+
 // CreateSnippet creates a snippet. Call is idempotent.
 func (h *SnippetHandler) CreateSnippet(c *gin.Context) {
 	id := c.Param("id")
 
-	c.String(http.StatusOK, "Create new snippet..."+id)
+	guid := uuid.MustParse(id)
+
+	sn, err := h.DB.Get(context.Background(), guid)
+	if err == sql.ErrNoRows {
+		var r snippetRequest
+		if err := c.ShouldBindJSON(&r); err != nil {
+			ServerError(c, err)
+			return
+		}
+
+		created := time.Now()
+
+		arg := db.CreateSnippetParams{
+			Guid:    guid,
+			Title:   r.Title,
+			Content: r.Content,
+			Created: created,
+			Expires: created.AddDate(0, 0, int(r.Expires)),
+		}
+
+		sn, err = h.DB.CreateSnippet(context.Background(), arg)
+		if err != nil {
+			ServerError(c, err)
+			return
+		}
+	}
+
+	location := url.URL{Path: fmt.Sprintf("/snippets/%s", sn.Guid)}
+	c.Redirect(http.StatusMovedPermanently, location.RequestURI())
 }
