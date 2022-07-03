@@ -25,9 +25,8 @@ func (h *SnippetHandler) Home(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "home.page.tmpl", gin.H{
-		"Page":        "Home",
-		"Snippets":    s,
-		"CurrentYear": time.Now().Year(),
+		"Page":     "Home",
+		"Snippets": s,
 	})
 }
 
@@ -46,9 +45,8 @@ func (h *SnippetHandler) ShowSnippet(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "show.page.tmpl", gin.H{
-		"Page":        "Snippet #" + s.Guid.String(),
-		"Snippet":     s,
-		"CurrentYear": time.Now().Year(),
+		"Page":    "Snippet #" + s.Guid.String(),
+		"Snippet": s,
 	})
 }
 
